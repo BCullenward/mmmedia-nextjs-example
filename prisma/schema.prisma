@@ -4,6 +4,10 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// IF YOU CHANGE THIS DON'T FORGET TO RUN:
+// npx prisma db push 
+// npx prisma generate
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -49,6 +53,71 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+}
+
+model MovieLocation {
+  id Int @id @default(autoincrement())
+  RootDirectoryName String? 
+  ParentDirectoryName String?
+  DirectoryName String 
+  FileName String 
+  Extension String?
+  FileSize String?
+  Movies Movies1?
+}
+
+
+model Movies1 {
+  id Int @id @default(autoincrement())
+  MovieLocation MovieLocation @relation(fields: [movieLocationID], references: [id])
+  movieLocationID Int @unique
+  imageString String
+  title String 
+  age Int 
+  duration Float 
+  overview String 
+  release Int 
+  videoSource String 
+  category String 
+  youtubeString String 
+  imdbID String? 
+  tmdbID String?
+  WatchLists WatchList1[]
+
+  createdAt DateTime @default(now())
+}
+
+model WatchList1 {
+  id     String @id @default(uuid())
+  userId String
+
+  Movie   Movies1? @relation(fields: [movieId], references: [id])
+  movieId Int?
+}
+
+
+model Movie {
+  id            Int         @id
+  imageString   String
+  title         String
+  age           Int
+  duration      Float
+  overview      String
+  release       Int
+  videoSource   String
+  category      String
+  youtubeString String
+  WatchLists    WatchList[]
+
+  createdAt DateTime @default(now())
+}
+
+model WatchList {
+  id     String @id @default(uuid())
+  userId String
+
+  Movie   Movie? @relation(fields: [movieId], references: [id])
+  movieId Int?
 }
 
 model VerificationToken {
