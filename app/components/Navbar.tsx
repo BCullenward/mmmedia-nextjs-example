@@ -17,6 +17,7 @@ const links: iLinkProps[] = [
   { name: "TV Shows", href: "/home/shows" },
   { name: "Movies", href: "/home/movies" },
   { name: "Recently Added", href: "/home/recently" },
+  { name: "MovieList", href: "/home/my/movielist" },
   { name: "My Favorites", href: "/home/user/list" },
 ];
 

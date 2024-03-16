@@ -55,44 +55,41 @@ model User {
   sessions      Session[]
 }
 
-model MovieLocation {
+model MediaStaging {
   id Int @id @default(autoincrement())
-  RootDirectoryName String? 
-  ParentDirectoryName String?
-  DirectoryName String 
-  FileName String 
-  Extension String?
-  FileSize String?
-  Movies Movies1?
+  FullPath String?
 }
 
 
-model Movies1 {
-  id Int @id @default(autoincrement())
-  MovieLocation MovieLocation @relation(fields: [movieLocationID], references: [id])
-  movieLocationID Int @unique
-  imageString String
-  title String 
-  age Int 
-  duration Float 
-  overview String 
-  release Int 
-  videoSource String 
-  category String 
-  youtubeString String 
+model Media {
+  id Int @id @default(autoincrement())  
   imdbID String? 
-  tmdbID String?
-  WatchLists WatchList1[]
-
+  tmdbID String?  
+  title String?
+  original_title String?
+  overview String?
+  release_date DateTime?
+  poster_path String?  
+  backdrop_path String?
+  tagline String?
+  runtime Float?
+  adult Boolean?
+  genre String[]
+  collection_name String?
+  certification String?
+  trailerURL String?
+  WatchLists WatchListMedia[]
+  fullpath String
+  mediaType String?
   createdAt DateTime @default(now())
 }
 
-model WatchList1 {
+model WatchListMedia {
   id     String @id @default(uuid())
   userId String
 
-  Movie   Movies1? @relation(fields: [movieId], references: [id])
-  movieId Int?
+  Media   Media? @relation(fields: [mediaId], references: [id])
+  mediaId Int?
 }
 
 
