@@ -7,8 +7,8 @@ export default async function MovieListing() {
     "use server";
     await prisma.$executeRaw`TRUNCATE TABLE "MediaStaging" RESTART IDENTITY`;
     await prisma.mediaStaging.createMany({ data: media });
-    await prisma.$executeRaw`insert into "Media" ("fullpath","mediaType")
-                             select ms."FullPath", 
+    await prisma.$executeRaw`insert into "Media" ("directoryName", "fullpath","mediaType")
+                             select ms."ParentDirectoryName", ms."FullPath", 
                                 case upper(left(right(ms."FullPath", length(ms."FullPath") - 3), 2)) 
                                     when 'TV' then 'shows' else 'movies' end as mediaType
                              from "MediaStaging" as ms

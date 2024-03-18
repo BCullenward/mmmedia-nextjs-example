@@ -57,6 +57,7 @@ model User {
 
 model MediaStaging {
   id Int @id @default(autoincrement())
+  ParentDirectoryName String?
   FullPath String?
 }
 
@@ -79,6 +80,7 @@ model Media {
   certification String?
   trailerURL String?
   WatchLists WatchListMedia[]
+  directoryName String
   fullpath String
   mediaType String?
   createdAt DateTime @default(now())
