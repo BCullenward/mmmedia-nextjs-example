@@ -1,0 +1,22 @@
+#This should be called .env  
+#You'll need to fill out your own api keys and values for this
+DATABASE_URL="Here is the Database URL"
+
+
+GITHUB_ID=GITHUB API KEY FOR LOGGING IN WITH GITHUB
+GITHUB_SECRET=GITHUB SECRET FOR LOGGING IN WITH GITHUB
+
+GOOGLE_CLIENT_ID=CLIENT ID FOR GOOGLE TO LOGIN WITH GOOGLE
+GOOGLE_CLIENT_SECRET=CLIENT SECRET FOR GOOGLE
+
+#email uses resend from Resend.com create an account and fill that info in here
+EMAIL_SERVER_USER=user
+EMAIL_SERVER_PASSWORD=password
+EMAIL_SERVER_HOST=smtp host
+EMAIL_SERVER_PORT=smtp port
+EMAIL_FROM=email from, if using resend check notes on which email to use
+
+NEXT_PUBLIC_TMDB_API=themoviedb api, client side env need NEXT_PUBLIC attached to the front
+
+TMDB_TRAILER_URL=not yet implemented
+TMDB_CLASSIFICATION_URL=not yet implemented
