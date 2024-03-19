@@ -13,7 +13,7 @@ export async function searchMedia(filename: string, mediaType: string) {
   apiURL = apiURL + "?api_key=" + key + "&query=" + searchPhrase;
   const response = await axios.get(apiURL);
   const movies = response.data.results;
-  //console.log(movies);
+  console.log(movies);
 
   return movies;
 }

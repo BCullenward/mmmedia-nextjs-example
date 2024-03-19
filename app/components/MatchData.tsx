@@ -1,10 +1,10 @@
 "use client";
 import { searchMedia } from "@/app/api/tmdb";
-import { Grid } from "lucide-react";
 import { useEffect, useState } from "react";
+import { updateMovie } from "@/app/db/media";
 
 interface iMediaProps {
-  id: number;
+  mediaId: number;
   directoryName: string;
   mediaType: string;
 }
@@ -26,8 +26,30 @@ interface iTMDBResponse {
   vote_count: number;
 }
 
-export function MatchData({ id, directoryName, mediaType }: iMediaProps) {
+export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
   const [mediaList, setMediaList] = useState<iTMDBResponse[]>([]);
+
+  if (mediaList.length == 1) {
+    console.log("has one");
+    //const data = updateMovie(mediaId, mediaList[0].id.toString());
+    // imdbID String?
+    // tmdbID String?
+    // title String?
+    // original_title String?
+    // overview String?
+    // release_date DateTime?
+    // poster_path String?
+    // backdrop_path String?
+    // tagline String?
+    // runtime Float?
+    // adult Boolean?
+    // genre String[]
+    // collection_name String?
+    // certification String?
+    // trailerURL String?
+  } else {
+    console.log(mediaList.length);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,8 +66,9 @@ export function MatchData({ id, directoryName, mediaType }: iMediaProps) {
         Possible Matches:
         <br />
         <div className="grid">
-          {mediaList.map((x) => (
-            <div key={x.id} className="row-auto col-span-4">
+          {mediaList.map((x, mediaId) => (
+            <div key={mediaId} className="row-auto col-span-4">
+              TMDBID: {x.id}
               Title: {x.title}
               Release Date: {x.release_date}
             </div>

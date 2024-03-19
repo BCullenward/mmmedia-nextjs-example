@@ -1,3 +1,4 @@
+"use server";
 import prisma from "@/app/utils/db";
 
 interface iTMDBSearchProps {
@@ -17,3 +18,30 @@ export async function getData(numRows: number) {
 
   return data;
 }
+
+export async function updateMovie(mediaId: number, tmdbId: string) {
+  "use server";
+  const data = await prisma.media.update({
+    where: { id: mediaId },
+    data: {
+      tmdbID: tmdbId,
+    },
+  });
+  return data;
+}
+
+// export async function addToWatchlist(formData: FormData) {
+//   "use server";
+
+//   const movieId = formData.get("movieId");
+//   const pathName = formData.get("pathname") as string;
+//   const session = await getServerSession(authOptions);
+
+//   const data = await prisma.watchList.create({
+//     data: {
+//       userId: session?.user?.email as string,
+//       movieId: Number(movieId),
+//     },
+//   });
+//   revalidatePath(pathName);
+// }

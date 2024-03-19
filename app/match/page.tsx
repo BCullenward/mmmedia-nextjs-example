@@ -20,7 +20,7 @@ export default async function Match() {
       <div className="m-5">
         {myArray.map((media, idx) => (
           <MatchData
-            id={media.id}
+            mediaId={media.id}
             directoryName={media.directoryName}
             mediaType={media.mediaType}
           />
