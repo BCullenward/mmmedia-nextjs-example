@@ -1,6 +1,5 @@
-import prisma from "@/app/utils/db";
-import { Button } from "@/components/ui/button";
-import { searchMedia } from "@/app/services/tmdbMediaServices";
+import { getData } from "@/app/db/media";
+import { MatchData } from "../components/MatchData";
 
 interface iTMDBSearchProps {
   id: number;
@@ -8,28 +7,23 @@ interface iTMDBSearchProps {
   mediaType: string;
 }
 
-async function getData() {
-  const data: iTMDBSearchProps[] = await prisma.$queryRaw`
-        select max("id") as id, "directoryName", "mediaType"
-        from "Media"
-        where "tmdbID" is null
-        group by "directoryName", "mediaType"
-        limit 20
-      `;
-  return data;
-}
+const numRows = 2;
+var myArray: iTMDBSearchProps[];
 
 export default async function Match() {
-  const myData = await getData();
+  const myData = await getData(numRows).then((res) => {
+    myArray = res;
+  });
 
   return (
     <>
       <div className="m-5">
-        {myData.map((media) => (
-          <div key={media.id}>
-            <h1>{media.directoryName}</h1>
-            {/* <p>{searchMedia(media.directoryName, media.mediaType)}</p> */}
-          </div>
+        {myArray.map((media, idx) => (
+          <MatchData
+            id={media.id}
+            directoryName={media.directoryName}
+            mediaType={media.mediaType}
+          />
         ))}
       </div>
     </>

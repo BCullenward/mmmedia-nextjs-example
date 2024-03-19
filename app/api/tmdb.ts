@@ -1,43 +1,24 @@
 import axios from "axios";
-//const fetch = require("node-fetch");
 
-const key = process.env.TMDB_API;
+const key = process.env.NEXT_PUBLIC_TMDB_API;
 
 const baseUrl = "https://api.themoviedb.org/3";
 const movieSearchUrl = baseUrl + "/search/movie";
 const showSearchUrl = baseUrl + "/search/tv";
 
-// interface iTMDBResponse {
-//   adult: boolean;
-//   backdrop_path: string;
-//   genre_ids: string[];
-//   id: number;
-//   original_language: string;
-//   original_title: string;
-//   overview: string;
-//   popularity: number;
-//   poster_path: string;
-//   release_date: string;
-//   title: string;
-//   video: boolean;
-//   vote_average: number;
-//   vote_count: number;
-// }
-
-export async function searchMedia(filename, mediaType) {
+export async function searchMedia(filename: string, mediaType: string) {
   var searchPhrase = removeYear(filename).trim();
   searchPhrase = searchPhrase.split(" ").join("+");
   var apiURL = mediaType == "shows" ? `${showSearchUrl}` : `${movieSearchUrl}`;
   apiURL = apiURL + "?api_key=" + key + "&query=" + searchPhrase;
-  var movies = [];
-  await axios.get(apiURL).then((response) => (movies = response.data.results));
-
+  const response = await axios.get(apiURL);
+  const movies = response.data.results;
   //console.log(movies);
 
   return movies;
 }
 
-export function removeYear(filename) {
+export function removeYear(filename: string) {
   var res = filename;
 
   if (filename.length > 6) {
@@ -51,5 +32,4 @@ export function removeYear(filename) {
   return res;
 }
 
-const ml = [];
 export default searchMedia;
