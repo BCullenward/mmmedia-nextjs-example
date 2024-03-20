@@ -1,5 +1,5 @@
 "use client";
-import { searchMedia } from "@/app/api/tmdb";
+import { searchMedia, getMedia } from "@/app/api/tmdb";
 import { useEffect, useState } from "react";
 import { updateMovie } from "@/app/db/media";
 
@@ -9,7 +9,7 @@ interface iMediaProps {
   mediaType: string;
 }
 
-interface iTMDBResponse {
+interface iTMDBSearchResponse {
   adult: boolean;
   backdrop_path: string;
   genre_ids: string[];
@@ -26,42 +26,70 @@ interface iTMDBResponse {
   vote_count: number;
 }
 
+interface iTMDBResponse {
+  adult: boolean;
+  backdrop_path: string;
+  belongs_to_collection: string;
+  budget: number;
+  genres: string[];
+  homepage: string;
+  id: number;
+  imdb_id: string;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  production_companies: string[];
+  production_countries: string[];
+  release_date: string;
+  revenue: number;
+  runtime: number;
+  spoken_languages: string[];
+  status: string;
+  tagline: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
+
 export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
-  const [mediaList, setMediaList] = useState<iTMDBResponse[]>([]);
+  const [mediaList, setMediaList] = useState<iTMDBSearchResponse[]>([]);
+  const [mediaItem, setMediaItem] = useState<iTMDBResponse[]>([]);
 
   if (mediaList.length == 1) {
-    console.log("has one");
     //const data = updateMovie(mediaId, mediaList[0].id.toString());
-    // imdbID String?
-    // tmdbID String?
-    // title String?
-    // original_title String?
-    // overview String?
-    // release_date DateTime?
-    // poster_path String?
-    // backdrop_path String?
-    // tagline String?
-    // runtime Float?
-    // adult Boolean?
-    // genre String[]
-    // collection_name String?
-    // certification String?
-    // trailerURL String?
   } else {
-    console.log(mediaList.length);
+    //console.log(mediaList.length);
   }
 
   useEffect(() => {
     const fetchData = async () => {
-      const data: iTMDBResponse[] = await searchMedia(directoryName, mediaType);
-      setMediaList(data);
+      var mediaDetails = [];
+
+      const searchResults: iTMDBSearchResponse[] = await searchMedia(
+        directoryName,
+        mediaType
+      );
+
+      setMediaList(searchResults);
+      if (searchResults.length == 1) {
+        searchResults.map((row) => {
+          mediaDetails.push(getMedia(mediaId, row.id, mediaType));
+        });
+      }
+      //setMediaItem(mediaDetails);
+      //console.log(mediaDetails[0]);
+      //const res2 = await axios.all(mediaDetails)
+      //console.log(mediaDetails[0]);
     };
     fetchData();
   }, []);
 
   return (
     <>
-      <h1>In Match Data with {directoryName}</h1>
+      <h1>{directoryName}</h1>
       <div>
         Possible Matches:
         <br />

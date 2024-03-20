@@ -19,12 +19,17 @@ export async function getData(numRows: number) {
   return data;
 }
 
-export async function updateMovie(mediaId: number, tmdbId: string) {
+export async function updateMovie(
+  mediaId: number,
+  tmdbId: string,
+  imdb_id: string
+) {
   "use server";
   const data = await prisma.media.update({
     where: { id: mediaId },
     data: {
       tmdbID: tmdbId,
+      imdbID: imdb_id,
     },
   });
   return data;
