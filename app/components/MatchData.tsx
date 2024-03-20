@@ -66,7 +66,7 @@ export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-      var mediaDetails = [];
+      var mediaDetails: Promise<any>[] = [];
 
       const searchResults: iTMDBSearchResponse[] = await searchMedia(
         directoryName,
@@ -75,14 +75,18 @@ export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
 
       setMediaList(searchResults);
       if (searchResults.length == 1) {
-        searchResults.map((row) => {
-          mediaDetails.push(getMedia(mediaId, row.id, mediaType));
+        searchResults.map(async (row) => {
+          mediaDetails.push(await getMedia(mediaId, row.id, mediaType));
+          console.log(mediaDetails);
         });
+        // const mediaDetails: iTMDBResponse[] = await Promise.all(
+        //   searchResults.map((row) => {
+        //     getMedia(mediaId, row.id, mediaType);
+        //   })
+        // );
+        // setMediaItem(mediaDetails);
+        // console.log(mediaItem);
       }
-      //setMediaItem(mediaDetails);
-      //console.log(mediaDetails[0]);
-      //const res2 = await axios.all(mediaDetails)
-      //console.log(mediaDetails[0]);
     };
     fetchData();
   }, []);
