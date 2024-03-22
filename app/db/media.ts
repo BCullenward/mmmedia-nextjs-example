@@ -22,17 +22,42 @@ export async function getData(numRows: number) {
 export async function updateMovie(
   mediaId: number,
   tmdbId: string,
-  imdb_id: string
+  imdb_id: string,
+  title: string,
+  original_title: string,
+  overview: string,
+  release_date: string,
+  poster_path: string,
+  backdrop_path: string,
+  tagline: string,
+  runtime: number,
+  adult: boolean,
+  genre: string,
+  collection_name: string,
+  certification: string,
+  trailerURL: string
 ) {
   "use server";
-  const data = await prisma.media.update({
-    where: { id: mediaId },
-    data: {
-      tmdbID: tmdbId,
-      imdbID: imdb_id,
-    },
-  });
-  return data;
+
+  // const data = await prisma.media.update({
+  //   where: { id: mediaId },
+  //   data: {
+  //     tmdbID: tmdbId,
+  //     imdbID: imdb_id,
+  //     title: title,
+  //     original_title: original_title,
+  //     overview: overview,
+  //     release_date: release_date,
+  //     poster_path: (poster_path ? "https://image.tmdb.org/t/p/original" + poster_path : null),
+  //     backdrop_path: (backdrop_path ? "https://image.tmdb.org/t/p/original" + backdrop_path : null),
+  //     tagline: tagline,
+  //     runtime: runtime,
+  //     adult: adult,
+  //     genre:
+  //   },
+  // });
+  //return data;
+  return "";
 }
 
 // export async function addToWatchlist(formData: FormData) {
