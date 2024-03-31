@@ -75,7 +75,7 @@ model Media {
   tagline String?
   runtime Float?
   adult Boolean?
-  genre String[]
+  genre String?
   collection_name String?
   certification String?
   trailerURL String?

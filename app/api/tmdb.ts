@@ -1,74 +1,14 @@
 import axios from "axios";
-import { updateMovie } from "@/app/db/media";
+import {
+  iTMDBSearchResponse,
+  iTMDBResponse,
+} from "@/app/interfaces/TMDBInterfaces";
 
 const key = process.env.NEXT_PUBLIC_TMDB_API;
 
 const baseUrl = "https://api.themoviedb.org/3";
 const movieUrl = "/movie";
 const showUrl = "/tv";
-
-interface iTMDBSearchResponse {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: string[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
-interface iTMDBResponse {
-  adult: boolean;
-  backdrop_path: string;
-  belongs_to_collection: string;
-  budget: number;
-  genres: iGenre[];
-  homepage: string;
-  id: number;
-  imdb_id: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  production_companies: string[];
-  production_countries: string[];
-  release_date: string;
-  release_dates: iCertification[];
-  revenue: number;
-  runtime: number;
-  spoken_languages: string[];
-  status: string;
-  tagline: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
-interface iGenre {
-  id: number;
-  name: string;
-}
-
-interface iCertification {
-  iso_3166_1: string;
-  release_dates: {
-    certification: string;
-    descriptors: string[];
-    iso_639_1: string;
-    note: string;
-    release_date: string;
-    type: number;
-  }[];
-}
 
 export async function searchForSpecificMedia(
   filename: string,
@@ -92,6 +32,9 @@ export async function searchForSpecificMedia(
   const response = await axios.get(apiURL);
   const movies: iTMDBSearchResponse[] = response.data.results;
 
+  console.log("apiUrl", apiURL);
+  console.log("movies", movies);
+
   return movies;
 }
 
@@ -107,7 +50,7 @@ export async function getMedia(
     `${tmdbId}` +
     "?api_key=" +
     key +
-    "&append_to_response=release_dates";
+    "&append_to_response=release_dates,videos";
 
   const response = await axios.get(apiURL);
   const movie: iTMDBResponse = await response.data;

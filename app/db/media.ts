@@ -1,11 +1,12 @@
 "use server";
 import prisma from "@/app/utils/db";
+import { iTMDBSearchProps } from "@/app/interfaces/TMDBInterfaces";
 
-interface iTMDBSearchProps {
-  id: number;
-  directoryName: string;
-  mediaType: string;
-}
+// interface iTMDBSearchProps {
+//   id: number;
+//   directoryName: string;
+//   mediaType: string;
+// }
 
 export async function getData(numRows: number) {
   const data: iTMDBSearchProps[] = await prisma.$queryRaw`
@@ -39,25 +40,32 @@ export async function updateMovie(
 ) {
   "use server";
 
-  // const data = await prisma.media.update({
-  //   where: { id: mediaId },
-  //   data: {
-  //     tmdbID: tmdbId,
-  //     imdbID: imdb_id,
-  //     title: title,
-  //     original_title: original_title,
-  //     overview: overview,
-  //     release_date: release_date,
-  //     poster_path: (poster_path ? "https://image.tmdb.org/t/p/original" + poster_path : null),
-  //     backdrop_path: (backdrop_path ? "https://image.tmdb.org/t/p/original" + backdrop_path : null),
-  //     tagline: tagline,
-  //     runtime: runtime,
-  //     adult: adult,
-  //     genre:
-  //   },
-  // });
-  //return data;
-  return "";
+  const data = await prisma.media.update({
+    where: { id: mediaId },
+    data: {
+      tmdbID: tmdbId,
+      imdbID: imdb_id,
+      title: title,
+      original_title: original_title,
+      overview: overview,
+      release_date: new Date(release_date),
+      poster_path: poster_path
+        ? "https://image.tmdb.org/t/p/original" + poster_path
+        : null,
+      backdrop_path: backdrop_path
+        ? "https://image.tmdb.org/t/p/original" + backdrop_path
+        : null,
+      tagline: tagline,
+      runtime: runtime,
+      adult: adult,
+      genre: genre,
+      collection_name: collection_name,
+      certification: certification,
+      trailerURL: trailerURL,
+    },
+  });
+  return data;
+  //return "";
 }
 
 // export async function addToWatchlist(formData: FormData) {

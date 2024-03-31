@@ -2,75 +2,16 @@
 import { searchForSpecificMedia, getMedia } from "@/app/api/tmdb";
 import { useEffect, useState } from "react";
 import { updateMovie } from "@/app/db/media";
-
-interface iMediaProps {
-  mediaId: number;
-  directoryName: string;
-  mediaType: string;
-}
-
-interface iTMDBSearchResponse {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: string[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
-interface iTMDBResponse {
-  adult: boolean;
-  backdrop_path: string;
-  belongs_to_collection: string;
-  budget: number;
-  genres: iGenre[];
-  homepage: string;
-  id: number;
-  imdb_id: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  production_companies: string[];
-  production_countries: string[];
-  release_date: string;
-  release_dates: iCertification[];
-  revenue: number;
-  runtime: number;
-  spoken_languages: string[];
-  status: string;
-  tagline: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
-interface iGenre {
-  id: number;
-  name: string;
-}
-
-interface iCertification {
-  iso_3166_1: string;
-  release_dates: {
-    certification: string;
-    descriptors: string[];
-    iso_639_1: string;
-    note: string;
-    release_date: string;
-    type: number;
-  }[];
-}
+import { format } from "date-fns";
+import {
+  iMediaProps,
+  iTMDBSearchResponse,
+  iTMDBResponse,
+  iGenre,
+  iCertification,
+  iVideo,
+  iCollection,
+} from "@/app/interfaces/TMDBInterfaces";
 
 export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
   const [mediaList, setMediaList] = useState<iTMDBSearchResponse[]>([]);
@@ -88,20 +29,35 @@ export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
     return gList;
   }
 
-  function getCertification(cert: iCertification[]) {
+  function getCertification(cert: iCertification) {
     var certification: string = "NA";
 
-    console.log(cert);
-    // cert.map((row) => {
-    //   if (row.iso_3166_1 == "US") {
-    //     console.log("US");
-    //   }
-    // });
-    // const c = cert.forEach((r) => {
-    //   console.log(r.iso_3166_1.toString());
-    // });
+    cert.results.forEach((r) => {
+      if (r.iso_3166_1 == "US") {
+        r.release_dates.forEach((c) => {
+          if (c.certification != "" && certification == "NA") {
+            certification = c.certification;
+          }
+        });
+      }
+    });
 
     return certification;
+  }
+
+  function getTrailerURL(video: iVideo) {
+    var trailerURL: string = "";
+    video.results.forEach((r) => {
+      if (
+        r.iso_639_1.toUpperCase() == "EN" &&
+        r.site.toUpperCase() == "YOUTUBE" &&
+        r.key != ""
+      ) {
+        trailerURL = "http://www.youtube.com/watch?v=" + r.key;
+        return trailerURL;
+      }
+    });
+    return trailerURL;
   }
 
   useEffect(() => {
@@ -116,12 +72,17 @@ export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
         const mediaResults = await Promise.all<iTMDBResponse>(
           searchResults.map((row) => getMedia(mediaId, row.id, mediaType))
         );
-        const mItem: iTMDBResponse = mediaResults[0];
 
+        const mItem: iTMDBResponse = mediaResults[0];
         const genreList = getGenreList(mItem.genres);
         const certification = getCertification(mItem.release_dates);
+        const trailerURL = getTrailerURL(mItem.videos);
+        const collectionName = mItem.belongs_to_collection.name;
 
-        const trailerURL = "";
+        var releaseDate =
+          mItem.release_date != null
+            ? format(mItem.release_date, "yyyy-MM-dd")
+            : "1900-01-01";
 
         updateMovie(
           mediaId,
@@ -130,14 +91,14 @@ export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
           mItem.title,
           mItem.original_title,
           mItem.overview,
-          mItem.release_date,
+          releaseDate,
           mItem.poster_path,
           mItem.backdrop_path,
           mItem.tagline,
           mItem.runtime,
           mItem.adult,
           genreList,
-          mItem.belongs_to_collection,
+          collectionName,
           certification,
           trailerURL
         );
