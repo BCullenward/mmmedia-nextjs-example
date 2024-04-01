@@ -7,7 +7,7 @@ interface iTMDBSearchProps {
   mediaType: string;
 }
 
-const numRows = 5;
+const numRows = 50;
 var myArray: iTMDBSearchProps[];
 
 export default async function Match() {

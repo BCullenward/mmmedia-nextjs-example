@@ -2,17 +2,12 @@
 import prisma from "@/app/utils/db";
 import { iTMDBSearchProps } from "@/app/interfaces/TMDBInterfaces";
 
-// interface iTMDBSearchProps {
-//   id: number;
-//   directoryName: string;
-//   mediaType: string;
-// }
-
 export async function getData(numRows: number) {
   const data: iTMDBSearchProps[] = await prisma.$queryRaw`
           select max("id") as id, "directoryName", "mediaType"
           from "Media"
           where "tmdbID" is null
+            and "mediaType" = 'movies'
           group by "directoryName", "mediaType"
           limit (${numRows})
         `;

@@ -11,13 +11,11 @@ const movieUrl = "/movie";
 const showUrl = "/tv";
 
 export async function searchForSpecificMedia(
-  filename: string,
-  mediaType: string
+  searchPhrase: string,
+  mediaType: string,
+  year: string,
+  region: string
 ) {
-  var yr = getYearFromFileName(filename).trim();
-  var searchPhrase = filename.replace(yr, "").replace("(", "").replace(")", "");
-  //var searchPhrase = removeYear(filename).trim();
-  searchPhrase = searchPhrase.split(" ").join("+");
   var apiURL =
     `${baseUrl}` +
     "/search" +
@@ -26,14 +24,14 @@ export async function searchForSpecificMedia(
     key +
     "&query=" +
     searchPhrase +
-    (yr.length == 4 ? "&primary_release_year=" + yr : "") +
-    "&region=US";
+    (year.length == 4 ? "&primary_release_year=" + year : "") +
+    (region?.length != 0 ? "&region=" + region : "");
 
   const response = await axios.get(apiURL);
   const movies: iTMDBSearchResponse[] = response.data.results;
 
-  console.log("apiUrl", apiURL);
-  console.log("movies", movies);
+  // console.log("apiUrl", apiURL);
+  // console.log("movies", movies);
 
   return movies;
 }
@@ -58,17 +56,17 @@ export async function getMedia(
   return movie;
 }
 
-export function getYearFromFileName(filename: string) {
-  var yr = "";
+// export function getYearFromFileName(filename: string) {
+//   var yr = "";
 
-  if (filename.length > 6) {
-    yr = filename.substring(filename.length - 6);
-    if (yr.substring(yr.length - 1) == ")" && yr.substring(0, 1) == "(") {
-      yr = yr.split("(").join("");
-      yr = yr.split(")").join("");
-    }
-  }
-  return yr;
-}
+//   if (filename.length > 6) {
+//     yr = filename.substring(filename.length - 6);
+//     if (yr.substring(yr.length - 1) == ")" && yr.substring(0, 1) == "(") {
+//       yr = yr.split("(").join("");
+//       yr = yr.split(")").join("");
+//     }
+//   }
+//   return yr;
+// }
 
 export default searchForSpecificMedia;
