@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/app/utils/db";
 import { iTMDBSearchProps } from "@/app/interfaces/TMDBInterfaces";
+import { iMedia } from "../interfaces/databaseInterfaces";
 
 export async function getData(numRows: number) {
   const data: iTMDBSearchProps[] = await prisma.$queryRaw`
@@ -12,6 +13,36 @@ export async function getData(numRows: number) {
           limit (${numRows})
         `;
 
+  return data;
+}
+
+export async function getRandomRecord() {
+  const data: iMedia[] = await prisma.$queryRaw`
+  select
+    "id",
+    "imdbID",
+    "tmdbID",
+    "title",
+    "original_title",
+    "overview",
+    cast(cast("release_date" as date) as varchar) as releasedate,
+    "poster_path",
+    "backdrop_path",
+    "tagline",
+    "runtime",
+    "adult",
+    "genre",
+    "collection_name",
+    "certification",
+    "trailerURL",
+    "directoryName"
+  from "Media"
+  where "tmdbID" is not null 
+    and "tmdbID" <> '0'    
+    and "mediaType" = 'movies'      
+  order by random()
+  limit 1
+`;
   return data;
 }
 

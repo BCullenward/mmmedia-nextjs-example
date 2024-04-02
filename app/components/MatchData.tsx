@@ -53,7 +53,7 @@ export function MatchData({ mediaId, directoryName, mediaType }: iMediaProps) {
         r.site.toUpperCase() == "YOUTUBE" &&
         r.key != ""
       ) {
-        trailerURL = "http://www.youtube.com/watch?v=" + r.key;
+        trailerURL = "http://www.youtube.com/embed/" + r.key;
         return trailerURL;
       }
     });
